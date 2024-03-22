@@ -16,6 +16,31 @@ $(document).ready(function() {
             navigateSlide(slideIndex);
         }
     });
+    
+    // Touch event listeners for swipe navigation
+    $('#presentation-container').on('touchstart', function(event) {
+        touchStartX = event.touches[0].clientX;
+    });
+
+    $('#presentation-container').on('touchmove', function(event) {
+        touchEndX = event.touches[0].clientX;
+    });
+
+    $('#presentation-container').on('touchend', function() {
+        handleSwipe();
+    });
+
+    // Function to handle swipe navigation
+    function handleSwipe() {
+        const swipeDistance = touchStartX - touchEndX;
+        if (Math.abs(swipeDistance) >= 50) { // Adjust the threshold as needed
+            if (swipeDistance > 0) {
+                navigateSlide(currentSlide + 1); // Swipe left
+            } else {
+                navigateSlide(currentSlide - 1); // Swipe right
+            }
+        }
+    }
 
     // Keyboard event listener for slide navigation
     $(document).keydown(function(event) {
