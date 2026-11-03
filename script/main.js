@@ -1,6 +1,8 @@
 $(document).ready(function() {
     let currentSlide = 0;
     const totalSlides = $('.slide').length;
+    let touchStartX = null;
+    let touchEndX = null;
 
     // Display the first slide initially
     $('.slide').eq(0).addClass('active').show();
@@ -20,14 +22,22 @@ $(document).ready(function() {
     // Touch event listeners for swipe navigation
     $('#presentation-container').on('touchstart', function(event) {
         touchStartX = event.touches[0].clientX;
+        touchEndX = touchStartX;
     });
 
     $('#presentation-container').on('touchmove', function(event) {
         touchEndX = event.touches[0].clientX;
     });
 
-    $('#presentation-container').on('touchend', function() {
+    $('#presentation-container').on('touchend', function(event) {
+        if (touchStartX === null) return;
+        if (event.changedTouches?.length) touchEndX = event.changedTouches[0].clientX;
         handleSwipe();
+        touchStartX = touchEndX = null;
+    });
+
+    $('#presentation-container').on('touchcancel', function() {
+        touchStartX = touchEndX = null;
     });
 
     // Function to handle swipe navigation
